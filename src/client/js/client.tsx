@@ -13,7 +13,6 @@ export default class Client extends Component {
     public state: IState;
 
     private socket: SocketIOClient.Socket;
-    private testo: boolean = true;
 
     constructor(props: null) {
         super(props);
@@ -29,7 +28,7 @@ export default class Client extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    public render() {
+    public render(): JSX.Element {
         return(
             <div>
                 <h1>{this.state.isConnected ? "connected" : "disconnected"}</h1>
@@ -45,32 +44,31 @@ export default class Client extends Component {
         )
     }
 
-    private handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
+    private handleSubmit(event: React.ChangeEvent<HTMLFormElement>): void {
         this.socket.emit("message", this.state.message);
         this.setState({message: ""});
         event.preventDefault();
     }
 
-    private handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    private handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
         this.setState({message: event.target.value});
     }
 
-    private setupSocket() {
+    private setupSocket(): void {
         this.socket.on("connect", this.onConnect.bind(this));
         this.socket.on("disconnect", this.onDisconnect.bind(this));
         this.socket.on("message", this.onMessage.bind(this));
     }
 
-    private onConnect() {
+    private onConnect(): void {
         this.setState({isConnected: true});
-        this.testo = false;
     }
 
-    private onDisconnect() {
+    private onDisconnect(): void {
         this.setState({isConnected: false});
     }
 
-    private onMessage(message: string) {
+    private onMessage(message: string): void {
         const newMessages = [...this.state.messages, message]
         this.setState({messages: newMessages});
     }
