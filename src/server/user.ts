@@ -14,9 +14,15 @@ export default class User {
 
     private setupSocket(): void {
         this.socket.on("disconnect", this.onDisconnect.bind(this));
+        this.socket.on("message", this.onMessage.bind(this));
     }
 
     private onDisconnect(): void {
         this.server.userDisconnected(this);
+    }
+
+    private onMessage(message: string): void {
+        this.socket.emit("message", message);
+        this.socket.broadcast.emit("message", message);
     }
 }
