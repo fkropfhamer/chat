@@ -18,7 +18,7 @@ export default class Server {
         this.app.use(express.static("public"));
 
         this.server.listen(Config.PORT, () => {
-        console.log(`listenings on *:${Config.PORT}`);
+        console.log(`server listening on *:${Config.PORT}`);
         });
 
         this.socket.on("connection", (socket: io.Socket) => {

@@ -16,13 +16,13 @@ export default class Client extends Component {
 
     constructor(props: null) {
         super(props);
-        this.socket = io(`http://localhost:${Config.PORT}`);
-        this.setupSocket();
         this.state = {
             isConnected: false,
             message: "",
             messages: [],
         };
+
+        this.connect();
         
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -71,6 +71,11 @@ export default class Client extends Component {
     private onMessage(message: string): void {
         const newMessages = [...this.state.messages, message]
         this.setState({messages: newMessages});
+    }
+
+    private connect(): void {
+        this.socket = io(`http://localhost:${Config.PORT}`);
+        this.setupSocket();
     }
 
 }
