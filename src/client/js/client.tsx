@@ -5,6 +5,7 @@ import Config from "../../global/config";
 import Chat from "./chat";
 import { Message } from "../../global/message";
 import Username from "./username";
+import Draw from "./draw";
 
 interface State {
     isConnected: boolean;
@@ -38,6 +39,7 @@ export default class Client extends Component {
             <div>
                 <h1>{this.state.isConnected ? "connected" : "disconnected"}</h1>
                 {this.state.hasUsername ? <Chat messages={this.state.messages} sendMessage={this.sendMessage}/> : <Username sendUsername={this.sendUsername}/>}
+                <Draw isDrawing={true}/>
             </div>
         )
     }
