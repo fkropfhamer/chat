@@ -2,15 +2,19 @@ import * as React from "react";
 import {Component} from "react";
 import * as io from "socket.io-client";
 import Config from "../../global/config";
+import Chat from "./chat";
+import { Message } from "../../global/message";
+import Username from "./username";
 
-interface IState {
+interface State {
     isConnected: boolean;
-    message: string;
-    messages: string[];
+    messages: Message[];
+    username: string;
+    hasUsername: boolean;
 }
 
 export default class Client extends Component {
-    public state: IState;
+    public state: State;
 
     private socket: SocketIOClient.Socket;
 
@@ -18,42 +22,37 @@ export default class Client extends Component {
         super(props);
         this.state = {
             isConnected: false,
-            message: "",
             messages: [],
+            username: "anonymous",
+            hasUsername: false
         };
 
         this.connect();
         
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
+        this.sendUsername = this.sendUsername.bind(this);
     }
 
     public render(): JSX.Element {
         return(
             <div>
                 <h1>{this.state.isConnected ? "connected" : "disconnected"}</h1>
-                {this.state.messages.map((message, i) => <h1 key={i}>{message}</h1>)}
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Message:
-                        <input type="text" name="message" value={this.state.message} onChange={this.handleChange} />
-                    </label>
-                    <input type="submit" value="Send" />
-                </form>
+                {this.state.hasUsername ? <Chat messages={this.state.messages} sendMessage={this.sendMessage}/> : <Username sendUsername={this.sendUsername}/>}
             </div>
         )
     }
 
-    private handleSubmit(event: React.ChangeEvent<HTMLFormElement>): void {
-        this.socket.emit("message", this.state.message);
-        this.setState({message: ""});
+    private sendMessage(message: string): void {
+        this.socket.emit("message", {username: this.state.username ,message});
         event.preventDefault();
     }
 
-    private handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({message: event.target.value});
+    private sendUsername(username: string): void {
+        this.state.username = username;
+        this.socket.emit("set_username", username);
+        this.setState({hasUsername : true});
     }
-
+    
     private setupSocket(): void {
         this.socket.on("connect", this.onConnect.bind(this));
         this.socket.on("disconnect", this.onDisconnect.bind(this));
@@ -68,8 +67,8 @@ export default class Client extends Component {
         this.setState({isConnected: false});
     }
 
-    private onMessage(message: string): void {
-        const newMessages = [...this.state.messages, message]
+    private onMessage(message: Message): void {
+        const newMessages = [...this.state.messages,  message]
         this.setState({messages: newMessages});
     }
 
