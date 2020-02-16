@@ -3,15 +3,21 @@ import Server from "./server";
 import { Message } from "../global/message";
 
 export default class User {
+    public username: string;
+    
     private socket: io.Socket;
     private server: Server;
-    private username: string;
+    
 
     constructor(socket: io.Socket, server: Server) {
         this.socket = socket;
         this.server = server;
 
         this.setupSocket();
+    }
+
+    public notifyUsersUpdate(users: string[]): void {
+        this.socket.emit("users", users);
     }
 
     private setupSocket(): void {

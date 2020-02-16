@@ -25,12 +25,26 @@ export default class Server {
             console.log("user connected");
             const newUser = new User(socket, this);
             this.connectedUsers.push(newUser);
+
+            socket.on("connected", () => {
+                this.notifyUpdateUsers();
+            });
         });
+
+        
     }
 
     public userDisconnected(user: User): void {
         console.log("user disconnected");
         this.connectedUsers = this.connectedUsers.filter((u: User) => !Object.is(u, user));
+
+        this.notifyUpdateUsers();
     }
+
+    private notifyUpdateUsers() {
+        const users = this.connectedUsers.map(connectedUser => connectedUser.username);
+        console.log(users);
+        this.connectedUsers.forEach(user => user.notifyUsersUpdate(users))
+    } 
 
 }

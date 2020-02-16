@@ -5,12 +5,14 @@ import Config from "../../global/config";
 import Chat from "./chat";
 import { Message } from "../../global/message";
 import Username from "./username";
+import UserList from "./userlist";
 
-interface State {
+type State = {
     isConnected: boolean;
     messages: Message[];
     username: string;
     hasUsername: boolean;
+    users: string[]
 }
 
 export default class Client extends Component {
@@ -23,11 +25,10 @@ export default class Client extends Component {
         this.state = {
             isConnected: false,
             messages: [],
+            users: [],
             username: "anonymous",
             hasUsername: false
         };
-
-        this.connect();
         
         this.sendMessage = this.sendMessage.bind(this);
         this.sendUsername = this.sendUsername.bind(this);
@@ -37,6 +38,7 @@ export default class Client extends Component {
         return(
             <div>
                 <h1>{this.state.isConnected ? "connected" : "disconnected"}</h1>
+                <UserList users={this.state.users}/>
                 {this.state.hasUsername ? <Chat messages={this.state.messages} sendMessage={this.sendMessage}/> : <Username sendUsername={this.sendUsername}/>}
             </div>
         )
@@ -48,8 +50,10 @@ export default class Client extends Component {
     }
 
     private sendUsername(username: string): void {
+        this.connect();
         this.state.username = username;
         this.socket.emit("set_username", username);
+        this.socket.emit("connected");
         this.setState({hasUsername : true});
     }
     
@@ -57,6 +61,7 @@ export default class Client extends Component {
         this.socket.on("connect", this.onConnect.bind(this));
         this.socket.on("disconnect", this.onDisconnect.bind(this));
         this.socket.on("message", this.onMessage.bind(this));
+        this.socket.on("users", this.onUsers.bind(this));
     }
 
     private onConnect(): void {
@@ -70,6 +75,11 @@ export default class Client extends Component {
     private onMessage(message: Message): void {
         const newMessages = [...this.state.messages,  message]
         this.setState({messages: newMessages});
+    }
+
+    private onUsers(users: string[]) {
+        console.log(users);
+        this.setState({users: users});
     }
 
     private connect(): void {
