@@ -1,11 +1,10 @@
 import * as io from "socket.io";
 import Server from "./server";
-import { Message } from "../global/message";
 
 export default class User {
     private socket: io.Socket;
     private server: Server;
-    private username: string;
+    private username = "";
 
     constructor(socket: io.Socket, server: Server) {
         this.socket = socket;
@@ -24,7 +23,11 @@ export default class User {
         this.server.userDisconnected(this);
     }
 
-    private onMessage(message: Message): void {
+    private onMessage(text: string): void {
+        const message = {
+            username: this.username,
+            text
+        }
         this.socket.emit("message", message);
         this.socket.broadcast.emit("message", message);
     }
