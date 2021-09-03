@@ -1,27 +1,22 @@
-import * as express from "express";
-import * as http from "http";
-import * as io from "socket.io";
-import Config from "../global/config";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
+import { port, socketConfig } from "../global/config";
 import User from "./user";
 
-export default class Server {
-    private app: express.Express;
-    private socket: io.Server;
-    private server: http.Server;
+export default class App {
+    private socket: any;
+    private server: any;
     private connectedUsers: User[] = [];
 
     constructor() {
-        this.app = express();
-        this.server = http.createServer(this.app);
-        this.socket = io(this.server);
+        this.server = createServer();
+        this.socket = new Server(this.server, socketConfig);
 
-        this.app.use(express.static("public"));
-
-        this.server.listen(Config.PORT, () => {
-        console.log(`server listening on *:${Config.PORT}`);
+        this.server.listen(port, () => {
+        console.log(`server listening on *:${port}`);
         });
 
-        this.socket.on("connection", (socket: io.Socket) => {
+        this.socket.on("connection", (socket: Socket) => {
             console.log("user connected");
             const newUser = new User(socket, this);
             this.connectedUsers.push(newUser);

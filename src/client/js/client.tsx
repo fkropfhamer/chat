@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Component} from "react";
-import * as io from "socket.io-client";
-import Config from "../../global/config";
+import { io, Socket } from "socket.io-client";
+import { backendUrl } from "../../global/config";
 import Chat from "./chat";
 import { Message } from "../../global/message";
 import Username from "./username";
@@ -16,16 +16,17 @@ interface State {
 export default class Client extends Component {
     public state: State;
 
-    private socket: SocketIOClient.Socket;
+    private socket: Socket;
 
     constructor(props: null) {
-        super(props);
+        super({});
         this.state = {
             isConnected: false,
             messages: [],
             username: "anonymous",
             hasUsername: false
         };
+        this.socket = io(backendUrl);
 
         this.connect();
         
@@ -43,8 +44,7 @@ export default class Client extends Component {
     }
 
     private sendMessage(message: string): void {
-        this.socket.emit("message", {username: this.state.username ,message});
-        event.preventDefault();
+        this.socket.emit("message", message);
     }
 
     private sendUsername(username: string): void {
@@ -73,7 +73,6 @@ export default class Client extends Component {
     }
 
     private connect(): void {
-        this.socket = io(`http://localhost:${Config.PORT}`);
         this.setupSocket();
     }
 
