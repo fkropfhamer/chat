@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Component} from "react";
 import { io, Socket } from "socket.io-client";
-import Config from "../../global/config";
+import { backendUrl } from "../../global/config";
 import Chat from "./chat";
 import { Message } from "../../global/message";
 import Username from "./username";
@@ -26,7 +26,7 @@ export default class Client extends Component {
             username: "anonymous",
             hasUsername: false
         };
-        this.socket = io(`http://localhost:${Config.PORT}`);
+        this.socket = io(backendUrl);
 
         this.connect();
         

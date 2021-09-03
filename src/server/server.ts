@@ -1,6 +1,6 @@
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import Config from "../global/config";
+import { port, socketConfig } from "../global/config";
 import User from "./user";
 
 export default class App {
@@ -10,15 +10,10 @@ export default class App {
 
     constructor() {
         this.server = createServer();
-        this.socket = new Server(this.server, {
-            cors: {
-                origin: "http://localhost:1234",
-                methods: ["GET", "POST"]
-            }
-        });
+        this.socket = new Server(this.server, socketConfig);
 
-        this.server.listen(Config.PORT, () => {
-        console.log(`server listening on *:${Config.PORT}`);
+        this.server.listen(port, () => {
+        console.log(`server listening on *:${port}`);
         });
 
         this.socket.on("connection", (socket: Socket) => {
