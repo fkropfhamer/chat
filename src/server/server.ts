@@ -14,7 +14,7 @@ export default class App {
             cors: {
                 origin: "http://localhost:1234",
                 methods: ["GET", "POST"]
-              }
+            }
         });
 
         this.server.listen(Config.PORT, () => {

@@ -23,7 +23,7 @@ export default function Chat(props: Props) {
 
     return (
         <div>
-            {props.messages.map((message, i) => <h1 key={i}>{`${message.username}: ${message.message}`}</h1>)}
+            {props.messages.map((message, i) => <h1 key={i}>{`${message.username}: ${message.text}`}</h1>)}
             <form onSubmit={handleSubmit}>
                 <label>
                     Message:

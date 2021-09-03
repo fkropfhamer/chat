@@ -44,7 +44,7 @@ export default class Client extends Component {
     }
 
     private sendMessage(message: string): void {
-        this.socket.emit("message", {username: this.state.username ,message});
+        this.socket.emit("message", message);
     }
 
     private sendUsername(username: string): void {
