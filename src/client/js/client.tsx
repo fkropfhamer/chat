@@ -13,13 +13,12 @@ interface State {
     hasUsername: boolean;
 }
 
-export default class Client extends Component {
-    public state: State;
+export default class Client extends Component<{}, State> {
 
     private socket: Socket;
 
-    constructor(props: null) {
-        super({});
+    constructor(props = {}) {
+        super(props);
         this.state = {
             isConnected: false,
             messages: [],
@@ -48,9 +47,8 @@ export default class Client extends Component {
     }
 
     private sendUsername(username: string): void {
-        this.state.username = username;
         this.socket.emit("set_username", username);
-        this.setState({hasUsername : true});
+        this.setState({hasUsername: true, username});
     }
     
     private setupSocket(): void {
