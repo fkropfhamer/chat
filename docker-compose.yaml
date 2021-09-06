@@ -1,0 +1,12 @@
+version: "3"
+services:
+  chat_server:
+    image: fkropfhamer/chat_client:stable
+    restart: always
+
+  chat_client:
+    image: fkropfhamer/chat_client:stable
+    ports: 
+      - 443:443
+      - 80:80
+    restart: always
