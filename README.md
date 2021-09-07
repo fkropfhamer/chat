@@ -19,3 +19,10 @@ npm run dev
 
 ### start chatting
 open http://localhost:1234 in browser.
+
+## docker
+### docker compose
+```console
+docker compose up
+```
+service is reachable on http://localhost:9898.
