@@ -1,5 +1,5 @@
 
-localhost:9898 {
+:9898 {
     root * /app/dist
     reverse_proxy /socket.io/* http://chat_server:9000
     file_server
