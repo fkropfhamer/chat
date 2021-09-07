@@ -7,3 +7,5 @@ lib/
 *.log
 **/.DS_Store
 .cache
+
+*.md

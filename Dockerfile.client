@@ -3,8 +3,7 @@ FROM node:16 as build
 
 WORKDIR /app
 
-COPY ./client /app
-COPY ./shared /shared
+COPY . /app
 
 RUN npm ci
 RUN npm run build
